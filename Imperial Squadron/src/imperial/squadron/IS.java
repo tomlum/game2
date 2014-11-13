@@ -6,53 +6,69 @@ import java.util.Vector;
 
 
 public class IS extends World {
-    static boolean debug = false;
+    static boolean debug = true;
     static int wallbuffer = 20;
     static int rwall = 960 - wallbuffer;
     static int dwall = 600 - wallbuffer;
     static int lwall = wallbuffer;
     static int uwall = wallbuffer;
-    Vector<TF> v = new Vector();
+    Vector<SS> imperialFleet = new Vector();
+    Vector<SS> rebelFleet = new Vector();
+    static double fr = .1;
     //array of friendlies and array of enemies
     
-    public IS(Vector v) {
+    public IS(Vector<SS> iF, Vector<SS> rF) {
 		super();
-                this.v = v;
+                this.imperialFleet = iF;
+                this.rebelFleet = rF;
 	}
     
     
     
     public IS onTick(){
-        Vector newV = new Vector();
-        for(int i = 0; i<v.size(); i++){
-            newV.add(v.elementAt(i).react());
+        Vector newIF = new Vector();
+        Vector newRF = new Vector();
+        for(int i = 0; i<imperialFleet.size(); i++){
+            newIF.add(imperialFleet.elementAt(i));
         }
-        return new IS(newV);
+        for(int i = 0; i<rebelFleet.size(); i++){
+            newRF.add(rebelFleet.elementAt(i).react(imperialFleet));
         }
+        return new IS(newIF, newRF);
+    }
         
         
         
     public IS onKeyEvent(String ke) {
-        Vector newV = v;
+        Vector newIF = imperialFleet;
+        Vector newRF = rebelFleet;
             if(ke.equals("a")){
-                newV.add(new TF(new Posn(400, 400), 2, TF.maxT));
+                newIF.add(new SS(new Posn(400, 400), Tester.randomInt(0, 3), SS.maxT, true));
             }
-            return new IS(newV);
+            if(ke.equals("d")){
+                newRF.add(new SS(new Posn(400, 400), Tester.randomInt(0, 3), SS.maxT, false));
+            }
+            return new IS(newIF, newRF);
     }
     
         
     public WorldImage makeImage(){
-        WorldImage theTFs = new RectangleImage(new Posn(1440/2,900/2), 1440, 900, new Black());
-        for(int i = 0; i<v.size(); i++){
-            TF current = v.elementAt(i);
-		theTFs = new OverlayImages(theTFs, current.image());
+        WorldImage theShips = new RectangleImage(new Posn(1440/2,900/2), 1440, 900, new Black());
+        for(int i = 0; i<imperialFleet.size(); i++){
+            SS current = imperialFleet.elementAt(i);
+		theShips = new OverlayImages(theShips, current.image());
         }
-        return theTFs;
+        for(int i = 0; i<rebelFleet.size(); i++){
+            SS current = rebelFleet.elementAt(i);
+		theShips = new OverlayImages(theShips, current.image());
+        }
+        return theShips;
     }
 
     public static void main(String[] args) {
-        IS w = new IS(new Vector());
-        w.bigBang(960, 600, .08);
+        Tester.testQuadrant(100);
+        IS w = new IS(new Vector(), new Vector());
+        w.bigBang(960, 600, fr);
     }
     
 }
