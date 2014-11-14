@@ -32,27 +32,41 @@ public class Tester {
     
     public static void testQuadrant(int trials){
         for(int i = 0; i < trials; i++){
+        int dir = randomInt(0,3);
         int range = SS.range-2;
         Posn center = new Posn(randomInt(0, 1000),randomInt(0, 1000));
         Posn quad1 = new Posn(center.x + randomInt(0, (range/2))+1,center.y - randomInt(0, (range/2))-1);
         Posn quad2 = new Posn(center.x - randomInt(0, (range/2))-1,center.y - randomInt(0, (range/2))-1);
         Posn quad3 = new Posn(center.x - randomInt(0, (range/2))-1,center.y + randomInt(0, (range/2))+1);
         Posn quad4 = new Posn(center.x + randomInt(0, (range/2))+1,center.y + randomInt(0, (range/2))+1);
-        SS base = randomSS(center, 0, 1, 1000000, true);
+        SS base = randomSS(center, 0, 0, 1000000, true);
         Vector<SS> enemies = new Vector();
         enemies.add(new SS(quad1, 0, 1000, false));
+        enemies.add(new SS(quad2, 0, 1000, false));
+            enemies.add(new SS(quad2, 0, 1000, false));
+        enemies.add(new SS(quad3, 0, 1000, false));
+            enemies.add(new SS(quad3, 0, 1000, false));
+            enemies.add(new SS(quad3, 0, 1000, false));
+        enemies.add(new SS(quad4, 0, 1000, false));
+            enemies.add(new SS(quad4, 0, 1000, false));
+            enemies.add(new SS(quad4, 0, 1000, false));
+            enemies.add(new SS(quad4, 0, 1000, false));
         int[] quad = base.quadrant(enemies);
-        if(quad[1]<=0){
-            System.out.println(enemies.size());
-            
-            System.out.println(enemies.elementAt(0).p.x + " " + enemies.elementAt(0).p.y);
-            System.out.println(base.p.x + " " + base.p.y);
-            System.out.println(quad[0]);
-            System.out.println(quad[1]);
-            System.out.println(quad[2]);
-            System.out.println(quad[3]);
-            System.out.println(quad[4]);
+        if(quad[1+(dir%4)]!=1+(dir%4)){
             System.out.println("Error in Quadrant 1");
+            System.out.println((1+(dir)%4) + " count is " + quad[1+(dir%4)]);
+        };
+        if(quad[1+((dir+1)%1)] != 1+((dir+1)%1)){
+            System.out.println("Error in Quadrant 2");
+            System.out.println((1+(dir+1)%4) + " count is " + quad[1+(dir+1%4)]);
+        };
+        if(quad[1+((dir+2)%1)] != 1+((dir+2)%1)){
+            System.out.println("Error in Quadrant 3");
+            System.out.println((1+(dir+2)%4) + " count is " + quad[1+((dir+2)%4)]);
+        };
+        if(quad[1+((dir+3)%1)] != 1+((dir+3)%1)){
+            System.out.println("Error in Quadrant 4");
+            System.out.println((1+(dir+3)%4) + " count is " + quad[1+((dir+3)%4)]);
         };
                 }
     }

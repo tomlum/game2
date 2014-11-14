@@ -11,19 +11,20 @@ public class SS{
     int speed;
     int t;
     
+    //no use yet
     enum Type {
     hunt,evade}
     enum Formation {
     scatter,cluster}
     enum Mode {
-    scan, react}
+    wander, react}
     
     //radius of radar detection
     static int range = 200;
-    static int maxspeed = 4;
+    static int maxspeed = 3;
     //max time before turn
     static int maxT = 30;
-    static int minT = 25;
+    static int minT = 20;
     static double chanceToTurn = .66;
     
     public SS(Posn p, int dir, int t, boolean i){
@@ -90,9 +91,9 @@ public class SS{
         }
         switch(this.dir){
             case 0: return new int[] {ss, q1, q2, q3, q4};
-            case 1: return new int[] {ss, q2, q3, q4, q1};
+            case 1: return new int[] {ss, q4, q1, q2, q3};
             case 2: return new int[] {ss, q3, q4, q1, q2};
-            case 3: return new int[] {ss, q4, q1, q2, q3};
+            case 3: return new int[] {ss, q2, q3, q4, q1};
         }
         return new int[] {ss, q1, q2, q3, q4}; 
     }
@@ -116,16 +117,9 @@ public class SS{
         int[] readout = this.quadrant(v);
         if(readout[1]+readout[4]>=readout[2]+readout[3]){
             newTF = newTF.turn(1);
-            System.out.println(readout[1]+readout[4]);
-            System.out.println(readout[3]+readout[2]);
-            System.out.println("turning right");
         }
         else if(readout[1]+readout[4]<readout[2]+readout[3]){
-            System.out.println(readout[3]+readout[2]);
-            System.out.println(readout[1]+readout[4]);
             newTF = newTF.turn(3);
-            
-            System.out.println("turning left");
         }
         return newTF;
     }
@@ -138,12 +132,10 @@ public class SS{
         if(this.t<=0){
             newTF.t = maxT-Tester.randomInt(0, maxT-minT);
         if(readout[0]+readout[1]+readout[2]+readout[3]+readout[4]<=0){
-            System.out.println("no enemies");
             newTF = Math.random()>chanceToTurn? newTF:
                     Math.random()>.5? newTF.turn(3) : newTF.turn(1);
         }
-        else{newTF = newTF.radar(v);
-            System.out.println("enemy detected");}
+        else{newTF = newTF.radar(v);}
         }
         
         return newTF.justDontHitWalls().thrust(maxspeed);

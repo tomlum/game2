@@ -6,7 +6,7 @@ import java.util.Vector;
 
 
 public class IS extends World {
-    static boolean debug = true;
+    static boolean debug = false;
     static int wallbuffer = 20;
     static int rwall = 960 - wallbuffer;
     static int dwall = 600 - wallbuffer;
@@ -14,7 +14,7 @@ public class IS extends World {
     static int uwall = wallbuffer;
     Vector<SS> imperialFleet = new Vector();
     Vector<SS> rebelFleet = new Vector();
-    static double fr = .1;
+    static double fr = .01;
     //array of friendlies and array of enemies
     
     public IS(Vector<SS> iF, Vector<SS> rF) {
@@ -29,7 +29,8 @@ public class IS extends World {
         Vector newIF = new Vector();
         Vector newRF = new Vector();
         for(int i = 0; i<imperialFleet.size(); i++){
-            newIF.add(imperialFleet.elementAt(i));
+            //newIF.add(imperialFleet.elementAt(i));
+            newIF.add(imperialFleet.elementAt(i).react(rebelFleet));
         }
         for(int i = 0; i<rebelFleet.size(); i++){
             newRF.add(rebelFleet.elementAt(i).react(imperialFleet));
