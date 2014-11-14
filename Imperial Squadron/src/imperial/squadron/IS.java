@@ -7,14 +7,16 @@ import java.util.Vector;
 
 public class IS extends World {
     static boolean debug = false;
-    static int wallbuffer = 20;
-    static int rwall = 960 - wallbuffer;
-    static int dwall = 600 - wallbuffer;
-    static int lwall = wallbuffer;
-    static int uwall = wallbuffer;
+    static int wallBuffer = 20;
+    static SS.Type iType = SS.Type.HUNT;
+    static SS.Type rType = SS.Type.HUNT;
+    static int rwall = 960 - wallBuffer;
+    static int dwall = 600 - wallBuffer;
+    static int lwall = wallBuffer;
+    static int uwall = wallBuffer;
     Vector<SS> imperialFleet = new Vector();
     Vector<SS> rebelFleet = new Vector();
-    static double fr = .01;
+    static double fr = .02;
     //array of friendlies and array of enemies
     
     public IS(Vector<SS> iF, Vector<SS> rF) {
@@ -28,6 +30,8 @@ public class IS extends World {
     public IS onTick(){
         Vector newIF = new Vector();
         Vector newRF = new Vector();
+        
+        
         for(int i = 0; i<imperialFleet.size(); i++){
             //newIF.add(imperialFleet.elementAt(i));
             newIF.add(imperialFleet.elementAt(i).react(rebelFleet));
@@ -35,20 +39,73 @@ public class IS extends World {
         for(int i = 0; i<rebelFleet.size(); i++){
             newRF.add(rebelFleet.elementAt(i).react(imperialFleet));
         }
+        
+        
+        for(int i = 0; i<imperialFleet.size(); i++){
+                int removed = 0;
+            if(imperialFleet.elementAt(i).health < -4){
+                newIF.remove(i-removed);
+                removed++;
+            }
+            }
+            
+            for(int i = 0; i<rebelFleet.size(); i++){
+                int removed = 0;
+            if(rebelFleet.elementAt(i).health < -4){
+                newRF.remove(i-removed);
+                removed++;
+            }
+            }
+        
+        for(int i = 0; i<imperialFleet.size(); i++){
+            newRF = imperialFleet.elementAt(i).doDamageVec(newRF, SS.laserDamage);
+            }
+            
+        for(int i = 0; i<rebelFleet.size(); i++){
+            newIF = rebelFleet.elementAt(i).doDamageVec(newIF, SS.laserDamage);
+            }
+        
+        
+        
+       
         return new IS(newIF, newRF);
     }
         
         
         
     public IS onKeyEvent(String ke) {
-        Vector newIF = imperialFleet;
-        Vector newRF = rebelFleet;
+        Vector<SS> newIF = imperialFleet;
+        Vector<SS> newRF = rebelFleet;
             if(ke.equals("a")){
-                newIF.add(new SS(new Posn(400, 400), Tester.randomInt(0, 3), SS.maxT, true));
+                newIF.add(new SS(new Posn(lwall, Tester.randomInt(uwall, dwall)), 1, SS.maxT, true, iType, SS.startHealth));
             }
             if(ke.equals("d")){
-                newRF.add(new SS(new Posn(400, 400), Tester.randomInt(0, 3), SS.maxT, false));
+                newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.maxT, false, rType, SS.startHealth));
             }
+            if(ke.equals("1")){
+                switch(iType){
+                    case FLEE: iType = SS.Type.HUNT; break;
+                    case HUNT: iType = SS.Type.FLEE; break;
+                }
+            }
+            if(ke.equals("2")){
+                switch(iType){
+                    case FLEE: rType = SS.Type.HUNT; break;
+                    case HUNT: rType = SS.Type.FLEE; break;
+                }
+            }
+            
+            //Formation
+            /*
+            if(ke.equals("3")){
+                Vector newNewIF = new Vector();
+                for(int i = 0; i<imperialFleet.size(); i++){
+            newNewIF.add(newIF.elementAt(i).swapFormation(rFormation));
+            }
+                newIF = newNewIF;
+            }
+                    */
+            
             return new IS(newIF, newRF);
     }
     
@@ -63,7 +120,7 @@ public class IS extends World {
             SS current = rebelFleet.elementAt(i);
 		theShips = new OverlayImages(theShips, current.image());
         }
-        return theShips;
+        return new OverlayImages(theShips, new TextImage(new Posn(400,40), imperialFleet.size() + " Tie Fighters and " + rebelFleet.size() + " X Wings" + " |====| You Type is " + iType,10, new Red()));
     }
 
     public static void main(String[] args) {
