@@ -10,6 +10,8 @@ public class IS extends World {
     static int wallBuffer = 20;
     static SS.Type iType = SS.Type.HUNT;
     static SS.Type rType = SS.Type.HUNT;
+    static SS.Formation iFormation = SS.Formation.IGNORE;
+    static SS.Formation rFormation = SS.Formation.IGNORE;
     static int rwall = 960 - wallBuffer;
     static int dwall = 600 - wallBuffer;
     static int lwall = wallBuffer;
@@ -28,46 +30,56 @@ public class IS extends World {
     
     
     public IS onTick(){
-        Vector newIF = new Vector();
-        Vector newRF = new Vector();
+        Vector<SS> newIF = new Vector();
+        Vector<SS> newRF = new Vector();
+        Vector<SS> newNewIF = new Vector();
+        Vector<SS> newNewRF = new Vector();
         
         
         for(int i = 0; i<imperialFleet.size(); i++){
             //newIF.add(imperialFleet.elementAt(i));
-            newIF.add(imperialFleet.elementAt(i).react(rebelFleet));
+            newIF.add(imperialFleet.elementAt(i).react(rebelFleet, imperialFleet));
         }
         for(int i = 0; i<rebelFleet.size(); i++){
-            newRF.add(rebelFleet.elementAt(i).react(imperialFleet));
+            newRF.add(rebelFleet.elementAt(i).react(imperialFleet, rebelFleet));
         }
         
         
+        int iRemoved = 0;
         for(int i = 0; i<imperialFleet.size(); i++){
-                int removed = 0;
             if(imperialFleet.elementAt(i).health < -4){
-                newIF.remove(i-removed);
-                removed++;
+                newIF.remove(i-iRemoved);
+                iRemoved++;
             }
             }
             
-            for(int i = 0; i<rebelFleet.size(); i++){
-                int removed = 0;
-            if(rebelFleet.elementAt(i).health < -4){
-                newRF.remove(i-removed);
-                removed++;
-            }
-            }
-        
-        for(int i = 0; i<imperialFleet.size(); i++){
-            newRF = imperialFleet.elementAt(i).doDamageVec(newRF, SS.laserDamage);
-            }
-            
+        int rRemoved = 0;
         for(int i = 0; i<rebelFleet.size(); i++){
-            newIF = rebelFleet.elementAt(i).doDamageVec(newIF, SS.laserDamage);
+            if(rebelFleet.elementAt(i).health < -4){
+                newRF.remove(i-rRemoved);
+                rRemoved++;
+            }
             }
         
+        for(int i = 0; i<newIF.size(); i++){
+                Object[] theResults = newIF.elementAt(i).doDamageVec(newRF, SS.laserDamage);
+            newRF = (Vector<SS>) theResults[0];
+                if(newRF.isEmpty()||(boolean)theResults[1]){
+                newNewIF.add(newIF.elementAt(i).isNotAttacking());}
+                else{newNewIF.add(newIF.elementAt(i).isAttacking());}
+            }
+        newIF = newNewIF;
+            
         
+        for(int i = 0; i<newRF.size(); i++){
+                Object[] theResults = newRF.elementAt(i).doDamageVec(newIF, SS.laserDamage);
+            newIF = (Vector<SS>) theResults[0];
+                if(newIF.isEmpty()||(boolean)theResults[1]){
+                newNewRF.add(newRF.elementAt(i).isNotAttacking());}
+                else{newNewRF.add(newRF.elementAt(i).isAttacking());}
+            }
+        newRF = newNewRF;
         
-       
         return new IS(newIF, newRF);
     }
         
@@ -77,41 +89,45 @@ public class IS extends World {
         Vector<SS> newIF = imperialFleet;
         Vector<SS> newRF = rebelFleet;
             if(ke.equals("a")){
-                newIF.add(new SS(new Posn(lwall, Tester.randomInt(uwall, dwall)), 1, SS.maxT, true, iType, SS.startHealth));
+                newIF.add(new SS(new Posn(lwall, Tester.randomInt(uwall, dwall)), 1, SS.maxT, true, iType, SS.startHealth, false, iFormation));
             }
             if(ke.equals("d")){
-                newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.maxT, false, rType, SS.startHealth));
+                newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.maxT, false, rType, SS.startHealth, false, rFormation));
             }
             if(ke.equals("1")){
                 switch(iType){
-                    case FLEE: iType = SS.Type.HUNT; break;
-                    case HUNT: iType = SS.Type.FLEE; break;
+                    case EVADE: iType = SS.Type.HUNT; break;
+                    case HUNT: iType = SS.Type.EVADE; break;
                 }
             }
             if(ke.equals("2")){
                 switch(iType){
-                    case FLEE: rType = SS.Type.HUNT; break;
-                    case HUNT: rType = SS.Type.FLEE; break;
+                    case EVADE: rType = SS.Type.HUNT; break;
+                    case HUNT: rType = SS.Type.EVADE; break;
                 }
             }
             
-            //Formation
-            /*
+           
             if(ke.equals("3")){
                 Vector newNewIF = new Vector();
+                switch(iFormation){
+                    case IGNORE: iFormation = SS.Formation.CLUSTER; break;
+                    case CLUSTER: iFormation = SS.Formation.SCATTER; break;
+                    case SCATTER: iFormation = SS.Formation.IGNORE; break;
+                }
                 for(int i = 0; i<imperialFleet.size(); i++){
-            newNewIF.add(newIF.elementAt(i).swapFormation(rFormation));
+            newNewIF.add(newIF.elementAt(i).swapFormation(iFormation));
             }
                 newIF = newNewIF;
             }
-                    */
+                    
             
             return new IS(newIF, newRF);
     }
     
         
     public WorldImage makeImage(){
-        WorldImage theShips = new RectangleImage(new Posn(1440/2,900/2), 1440, 900, new Black());
+        WorldImage theShips = new FromFileImage(new Posn(960/2, 600/2), "stars.png");
         for(int i = 0; i<imperialFleet.size(); i++){
             SS current = imperialFleet.elementAt(i);
 		theShips = new OverlayImages(theShips, current.image());
@@ -120,7 +136,10 @@ public class IS extends World {
             SS current = rebelFleet.elementAt(i);
 		theShips = new OverlayImages(theShips, current.image());
         }
-        return new OverlayImages(theShips, new TextImage(new Posn(400,40), imperialFleet.size() + " Tie Fighters and " + rebelFleet.size() + " X Wings" + " |====| You Type is " + iType,10, new Red()));
+        WorldImage HUD = new OverlayImages( 
+                new TextImage(new Posn(400,80)," |Your Type is " + iType + "|  |Your Formation is " + iFormation + "|" + " |Their type is " + rType,10, new Red()),
+                new TextImage(new Posn(400,40), imperialFleet.size() + " Tie Fighters and " + rebelFleet.size() + " X Wings",10, new Red()));
+        return new OverlayImages(theShips, HUD);
     }
 
     public static void main(String[] args) {
