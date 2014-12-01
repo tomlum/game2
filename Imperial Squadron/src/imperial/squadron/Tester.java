@@ -26,7 +26,9 @@ public class Tester {
                 SS.Type.HUNT,
                 100, 
                 false,
-                SS.Formation.IGNORE);
+                SS.Formation.IGNORE,
+                SS.Make.REG, 
+                SS.regRange);
     }
     
     
@@ -36,7 +38,7 @@ public class Tester {
     public static void testQuadrant(int trials){
         for(int i = 0; i < trials; i++){
         int dir = randomInt(0,3);
-        int range = SS.range-2;
+        int range = SS.regRange-2;
         Posn center = new Posn(randomInt(0, 1000),randomInt(0, 1000));
         Posn quad1 = new Posn(center.x + randomInt(0, (range/2))+1,center.y - randomInt(0, (range/2))-1);
         Posn quad2 = new Posn(center.x - randomInt(0, (range/2))-1,center.y - randomInt(0, (range/2))-1);
@@ -44,16 +46,16 @@ public class Tester {
         Posn quad4 = new Posn(center.x + randomInt(0, (range/2))+1,center.y + randomInt(0, (range/2))+1);
         SS base = randomSS(center, 0, 0, 1000000, true);
         Vector<SS> enemies = new Vector();
-        enemies.add(new SS(quad1, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-        enemies.add(new SS(quad2, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad2, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-        enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-        enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
-            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE));
+        enemies.add(new SS(quad1, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+        enemies.add(new SS(quad2, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad2, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+        enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad3, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+        enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
+            enemies.add(new SS(quad4, 0, 1000, false, SS.Type.HUNT, 100, false, SS.Formation.IGNORE, SS.Make.REG, SS.regRange));
         int[] quad = base.quadrant(enemies);
         if(quad[1+(dir%4)]!=1+(dir%4)){
             System.out.println("Error in Quadrant 1");
