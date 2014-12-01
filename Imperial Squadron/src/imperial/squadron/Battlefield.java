@@ -32,11 +32,11 @@ public class Battlefield extends World{
     static int regCost = 50;
     static int speederCost = 15;
     static int tankCost = 50;
-    Vector<SS> rebelMagazine;
+    SS[] rebelMagazine;
     
     //array of friendlies and array of enemies
     
-    public Battlefield(Vector<SS> iF, Vector<SS> rF, Vader v, int scrap, Vector<SS> rb) {
+    public Battlefield(Vector<SS> iF, Vector<SS> rF, Vader v, int scrap, SS[] rb) {
 		super();
                 this.imperialFleet = iF;
                 this.rebelFleet = rF;
@@ -54,6 +54,7 @@ public class Battlefield extends World{
         Vector<SS> newNewRF = new Vector();
         Vader newDV = this.darth;
         int newScrap = this.scrap;
+        
         
         
         for(int i = 0; i<imperialFleet.size(); i++){
@@ -133,6 +134,7 @@ public class Battlefield extends World{
         Vector<SS> newRF = rebelFleet;
         Vader newDV = this.darth;
         int newScrap = scrap;
+        
         if(!darth.deployed){
             if(ke.equals("q")&&newScrap>regCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.startHealth, false, iFormation, SS.Make.REG, SS.regRange));
@@ -148,16 +150,10 @@ public class Battlefield extends World{
             }
         }
             
-            if(ke.equals("o")){
-                    newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.launchT, false, iType, SS.startHealth, false, iFormation, SS.Make.REG, SS.regRange));
-                
-            }
-            if(ke.equals("k")){
-                    newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.launchT, false, iType, SS.speederStartHealth, false, iFormation, SS.Make.SPEEDER, SS.speederRange));
-                
-            }
-            if(ke.equals("m")){
-                    newRF.add(new SS(new Posn(rwall, Tester.randomInt(uwall, dwall)), 3, SS.launchT, false, iType, SS.tankStartHealth, false, iFormation, SS.Make.TANK, SS.tankRange));
+            if(rebelMagazine.length>0){
+                for(int i = 0; i<rebelMagazine.length; i++){
+                    newRF.add(rebelMagazine[i]);
+                }
             }
             
             
@@ -222,7 +218,7 @@ public class Battlefield extends World{
             
                     
             
-            return new Battlefield(newIF, newRF, newDV, newScrap, this.rebelMagazine);
+            return new Battlefield(newIF, newRF, newDV, newScrap, new SS[]{});
     }
     
         
