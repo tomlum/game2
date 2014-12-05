@@ -78,56 +78,7 @@ public class Vader{
     }
     
     
-    public int[] quadrant(Vector<SS> vec){
-        int q1 = 0;
-        int q2 = 0;
-        int q3 = 0;
-        int q4 = 0;
-        int ss = 0;
-        Vector<SS> newV = new Vector();
-        for(int i = 0; i < vec.size(); i++){
-                    SS enemy = vec.elementAt(i);
-                    
-                    
-                    if(enemy.p.x < this.p.x && enemy.p.x > this.p.x - range){
-                        if(enemy.p.y < this.p.y && enemy.p.y > this.p.y-range){
-                            q2++;
-                        }
-                        else if(enemy.p.y > this.p.y && enemy.p.y < this.p.y+range){
-                            q3++;
-                        }
-                    }
-                    else if(enemy.p.x > this.p.x && enemy.p.x < this.p.x + range){
-                        if(enemy.p.y < this.p.y && enemy.p.y > this.p.y-range){
-                            q1++;
-                        }
-                         else if(enemy.p.y > this.p.y && enemy.p.y < this.p.y+range){
-                            q4++;
-                        }
-                    }
-                    //Not sure if sweetspot is worth keeping, i.e. when enemy is directly in front
-                    //keep going forward
-                    /*
-                    switch(dir){
-                        case 0: if(Math.abs(enemy.p.x-this.p.x) < 40 && enemy.p.y < this.p.y && enemy.p.y > this.p.y - range){
-                                ss++; break;}
-                        case 1: if(Math.abs(enemy.p.y-this.p.y) < 40 && enemy.p.x > this.p.x && enemy.p.x < this.p.x + range){
-                                ss++; break;}
-                        case 2: if(Math.abs(enemy.p.x-this.p.x) < 40 && enemy.p.y > this.p.y && enemy.p.y < this.p.y + range){
-                                ss++; break;}
-                        case 3: if(Math.abs(enemy.p.y-this.p.y) < 40 && enemy.p.x < this.p.x && enemy.p.x < this.p.x - range){
-                                ss++; break;}
-                    }
-                            */
-        }
-        switch(this.dir){
-            case 0: return new int[] {ss, q1, q2, q3, q4};
-            case 1: return new int[] {ss, q4, q1, q2, q3};
-            case 2: return new int[] {ss, q3, q4, q1, q2};
-            case 3: return new int[] {ss, q2, q3, q4, q1};
-        }
-        return new int[] {ss, q1, q2, q3, q4}; 
-    }
+
     
     
     public Object[] doDamageVec(Vector<SS> v){

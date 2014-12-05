@@ -10,7 +10,10 @@ public class RSS extends BigShip{
     }
     
     public WorldImage image(){
+        if(this.hereHuh){
         return new FromFileImage(this.p, "minirss.png");
+        }
+        else return new FromFileImage(this.p, "minirssdestroyed.png");
     }
     
     public RSS move(){
@@ -21,8 +24,8 @@ public class RSS extends BigShip{
         
     }
     
-    public RSS destroy(int dir){
-        return new RSS(new Posn(this.p.x-speed, this.p.y), false, dir);
+    public RSS destroy(boolean b){
+        return new RSS(new Posn(this.p.x-speed, this.p.y), !b, 0);
     }
     
 }

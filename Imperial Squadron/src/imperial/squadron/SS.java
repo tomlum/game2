@@ -61,6 +61,8 @@ public class SS{
     static int launchT = 80;
     static double chanceToTurn = .6;
     
+    int cost;
+    
     public SS(Posn p, int dir, int t, boolean i, Type ty, int health, boolean at, Formation fo, Make m, int r){
       this.p = p;  
       this.dir = dir;
@@ -72,6 +74,12 @@ public class SS{
       this.fo = fo;
       this.m = m;
       this.range = r;
+      
+     switch(this.m){
+         case REG: this.cost = Battlefield.regCost; break;
+         case SPEEDER: this.cost = Battlefield.speederCost; break;
+         case TANK: this.cost = Battlefield.tankCost; break;
+     }
       
     }
     

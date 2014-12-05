@@ -5,6 +5,7 @@ import javalib.colors.*;
 import javalib.worldimages.*;
 import java.util.Vector;
 import java.awt.Color;
+//AT END OF GAME RETURN THE SHIPS TO SCRAP FOR HALF VALUE
 //corresponding array for magazines, access that when magazine bleh
 
 public class OverWorld extends World{
@@ -102,23 +103,42 @@ public class OverWorld extends World{
         boolean newBattleHuh = false;
         Battlefield newBat = this.theBattle;
         
+        
         if(battleHuh){
+            
+            if(this.theBattle.result.equals(Battlefield.Res.DONE)){
+            RSS[] newEnems = new RSS[this.enemies.length];
+                for(int i = 0; i<this.enemies.length; i++){
+                newEnems[i] = (this.enemies[i].destroy(this.theBattle.rebelBigShipNum-1==i));
+                System.out.println(this.theBattle.rebelBigShipNum-1);
+                System.out.println(this.enemies[i].hereHuh);
+            }
+                int newScrap = this.theBattle.scrap;
+                for(int i = 0; i<this.theBattle.imperialFleet.size(); i++){
+                    newScrap += this.theBattle.imperialFleet.elementAt(i).cost/2;
+            }
+                
+            return new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.theBattle.scrap, this.theBattle.rebelMagazine, 0, Battlefield.Res.START)
+                    , this.impSquad, newEnems, newScrap, this.t+1);  
+            }
+            
             return new OverWorld(this.battleHuh, this.theBattle.onTick(), this.impSquad, this.enemies, this.scrap, this.t+1);
         }
         else{
             
-        for(int i = 0; i < enemies.length; i++){
-        if(Math.abs(this.impSquad.p.x - this.enemies[i].p.x) < 35 &&
+        for(int i = 0; i < this.enemies.length; i++){
+        if(this.enemies[i].hereHuh &&
+           Math.abs(this.impSquad.p.x - this.enemies[i].p.x) < 35 &&
            Math.abs(this.impSquad.p.y - this.enemies[i].p.y) < 35){
             newBattleHuh = true;
-            newBat = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, formations[Tester.randomInt(0, formations.length)]);
+            newBat = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.scrap, formations[i],i+1, Battlefield.Res.START);
         }
         }
             
-        RSS[] newRS = new RSS[enemies.length];
+        RSS[] newRS = new RSS[this.enemies.length];
         if(this.t%3==0){
         for(int i = 0; i<enemies.length; i++){
-            newRS[i] = enemies[i].move();
+            newRS[i] = (enemies[i].move());
         }
         }
         else{newRS = enemies;
@@ -150,6 +170,8 @@ public class OverWorld extends World{
             theImage = new OverlayImages(theImage, this.enemies[i].image());
         }
         theImage = new OverlayImages(theImage, new TextImage(new Posn(480, 50), "Scrap : " + scrap, 30, Color.orange));
+        
+        
         return theImage;
     }
     }
@@ -157,10 +179,14 @@ public class OverWorld extends World{
     
     public static void main(String[] args) {
         Tester.testQuadrant(100);
+        RSS[] initialEnems = new RSS[]{
+            new RSS(new Posn(400, 400), true, 3),
+            new RSS(new Posn(600, 100), true, 3)
+        };
         //w = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap)
-        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{}),
+        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{},0,Battlefield.Res.START),
                 new ISS(new Posn (200, 200), true, 1), 
-                new RSS[] {new RSS(new Posn(400, 400), true, 3)}, 
+                initialEnems, 
                 startingScrap,
                 0);
         w.bigBang(960, 600, fr);

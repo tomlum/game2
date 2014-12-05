@@ -20,13 +20,13 @@ public class ISS extends BigShip{
     
     public ISS move(String ke){
         switch(ke){
-            case "w": if(this.p.y-speed>Battlefield.uwall){return new ISS(new Posn(this.p.x, this.p.y - speed), this.hereHuh, 0);}
+            case "up": if(this.p.y-speed>Battlefield.uwall){return new ISS(new Posn(this.p.x, this.p.y - speed), this.hereHuh, 0);}
             break;
-            case "d": if(this.p.x+speed<Battlefield.rwall){return new ISS(new Posn(this.p.x + speed, this.p.y), this.hereHuh, 1);}
+            case "right": if(this.p.x+speed<Battlefield.rwall){return new ISS(new Posn(this.p.x + speed, this.p.y), this.hereHuh, 1);}
             break;
-            case "s": if(this.p.y+speed<Battlefield.dwall){return new ISS(new Posn(this.p.x, this.p.y + speed), this.hereHuh, 2);}
+            case "down": if(this.p.y+speed<Battlefield.dwall){return new ISS(new Posn(this.p.x, this.p.y + speed), this.hereHuh, 2);}
             break;
-            case "a": if(this.p.x-speed>Battlefield.lwall){return new ISS(new Posn(this.p.x - speed, this.p.y), this.hereHuh, 3);}
+            case "left": if(this.p.x-speed>Battlefield.lwall){return new ISS(new Posn(this.p.x - speed, this.p.y), this.hereHuh, 3);}
             break;
         }
         return this;
