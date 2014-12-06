@@ -147,7 +147,28 @@ public class OverWorld extends World{
         }
     }
         
+    public WorldEnd worldEnds(){
+        if(this.theBattle.result.equals(Battlefield.Res.LOSE)){
+            return new WorldEnd(true,
+			    new OverlayImages(this.makeImage(),
+                                    new OverlayImages(new FromFileImage(new Posn(960/2,600/2), "shade.png"),
+                                            new TextImage(new Posn(960/2, 300), "LOSE", 100, Color.red))));
+        }
+        boolean allEnemiesDestroyed = true;
+                for(int i = 0; i < this.enemies.length; i++){
+                    if(enemies[i].hereHuh){
+                        allEnemiesDestroyed = false;
+                    }
+                }
+        if(allEnemiesDestroyed){
+            return new WorldEnd(true,
+			    new OverlayImages(this.makeImage(),
+                                    new OverlayImages(new FromFileImage(new Posn(960/2,600/2), "shade.png"),
+                                            new TextImage(new Posn(960/2, 300), "WIN", 100, Color.green))));
+        }
+        else return new WorldEnd(false, this.makeImage());
         
+    }   
         
     public OverWorld onKeyEvent(String ke){
         if(this.battleHuh){
@@ -180,8 +201,7 @@ public class OverWorld extends World{
     public static void main(String[] args) {
         Tester.testQuadrant(100);
         RSS[] initialEnems = new RSS[]{
-            new RSS(new Posn(400, 400), true, 3),
-            new RSS(new Posn(600, 100), true, 3)
+            new RSS(new Posn(400, 400), true, 3)
         };
         //w = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap)
         OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{},0,Battlefield.Res.START),

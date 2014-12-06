@@ -30,7 +30,7 @@ public class Battlefield extends World{
     Vader darth;
     int scrap;
     static int regCost = 50;
-    static int speederCost = 15;
+    static int speederCost = 25;
     static int tankCost = 100;
     SS[] rebelMagazine;
     int rebelBigShipNum;
@@ -290,7 +290,7 @@ public class Battlefield extends World{
         theShips = new OverlayImages(background, theShips);
         
         
-        if(this.result.equals(Res.LOSE)||this.result.equals(Res.WIN)){
+        if(this.result.equals(Res.WIN)){
             
             int newScrap = 0;
                 for(int i = 0; i<this.imperialFleet.size(); i++){
