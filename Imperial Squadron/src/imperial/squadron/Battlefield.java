@@ -1,5 +1,3 @@
-//I need to add an entirely new World extending class
-//maybe option to instead of sending ships have a laser
 package imperial.squadron;
 import javalib.funworld.*;
 import javalib.colors.*;
@@ -66,6 +64,10 @@ public class Battlefield extends World{
            if(!this.result.equals(Res.START) && this.darth.deployed && this.imperialFleet.size() <= 0){
                newResult = Res.LOSE;
            }
+           
+           if(!this.result.equals(Res.START) && this.scrap<25 && this.imperialFleet.size()<=0){
+               newResult = Res.LOSE;
+           }
          
             
         Vector<SS> newIF = new Vector();
@@ -100,9 +102,9 @@ public class Battlefield extends World{
                 newRF.remove(i-rRemoved);
                 rRemoved++;
                 switch(rebelFleet.elementAt(i).m){
-                    case REG: newScrap += 40; break;
+                    case REG: newScrap += 20; break;
                     case SPEEDER: newScrap += 10; break;
-                    case TANK: newScrap += 80; break;
+                    case TANK: newScrap += 30; break;
                 }
             }
             }
@@ -165,14 +167,14 @@ public class Battlefield extends World{
         Res newRes = this.result;
         
         if(!darth.deployed){
-            if(ke.equals("q")&&newScrap>=regCost){
+            if(ke.equals("a")&&newScrap>=regCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.startHealth, false, iFormation, SS.Make.REG, SS.regRange));
                 newScrap -= regCost;
                 if(this.result.equals(Res.START)){
                     newRes = Res.DUNNO;
                 }
             }
-            if(ke.equals("a")&&newScrap>=speederCost){
+            if(ke.equals("q")&&newScrap>=speederCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.speederStartHealth, false, iFormation, SS.Make.SPEEDER, SS.speederRange));
                 newScrap -= speederCost;
                 if(this.result.equals(Res.START)){
@@ -279,22 +281,26 @@ public class Battlefield extends World{
 		theShips = new OverlayImages(theShips, current.image());
         }
         WorldImage HUD = new OverlayImages( 
-                new TextImage(new Posn(200, 500), "Type: " + iType,15, Color.red),
-               new OverlayImages(
-                new TextImage(new Posn(200, 520), "Formation: " + iFormation,15, Color.red),
-                new TextImage(new Posn(300,20), imperialFleet.size() + " Tie Fighters and " + rebelFleet.size() + " X Wings",10, new Red())));
-        HUD = new OverlayImages(HUD, new TextImage(new Posn(200, 560), "Scrap: " + scrap,15, Color.yellow));
+                new TextImage(new Posn(200, 25), "Type: " + iType,16, Color.yellow),
+                new TextImage(new Posn(200, 50), "Formation: " + iFormation,16, Color.yellow));
+              
+        HUD = new OverlayImages(HUD, new TextImage(new Posn(400, 25), "Scrap: " + scrap,20, Color.orange));
         WorldImage bigShips = new OverlayImages(new FromFileImage(new Posn(imperialX, 600/2), "iss.png"), new FromFileImage(new Posn(rebelX, 600/2), "rss.png"));
         theShips = new OverlayImages(theShips, darth.image());
         theShips = new OverlayImages(bigShips, theShips);
         theShips = new OverlayImages(background, theShips);
+        theShips = new OverlayImages(theShips, new FromFileImage(new Posn(75, 25), iFormation+".png"));
+        theShips = new OverlayImages(theShips, new FromFileImage(new Posn(25, 25), iType+".png"));
+        theShips = new OverlayImages(theShips, new FromFileImage(new Posn(25, 475-150), "q.png"));
+        theShips = new OverlayImages(theShips, new FromFileImage(new Posn(25, 525-150), "a.png"));
+        theShips = new OverlayImages(theShips, new FromFileImage(new Posn(25, 575-150), "z.png"));
         
         
         if(this.result.equals(Res.WIN)){
             
             int newScrap = 0;
                 for(int i = 0; i<this.imperialFleet.size(); i++){
-                    newScrap += this.imperialFleet.elementAt(i).cost/2;
+                    newScrap += this.imperialFleet.elementAt(i).cost/3;
             }
             
         WorldImage Res = new OverlayImages(theShips, new FromFileImage(new Posn(960/2,600/2), "shade.png"));

@@ -3,10 +3,6 @@ import javalib.funworld.*;
 import javalib.colors.*;
 import javalib.worldimages.*;
 import java.util.Vector;
-//if no support then vadar's shield goes down
-//move like pacman
-//LAUNCH MODE AND THEN AIM WHERE TO FIRE IT, ALSO 3 TYPES
-//enemy has different behvaiors roward vadar
 
 public class SS{
     Posn p;

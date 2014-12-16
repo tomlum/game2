@@ -5,8 +5,6 @@ import javalib.colors.*;
 import javalib.worldimages.*;
 import java.util.Vector;
 import java.awt.Color;
-//AT END OF GAME RETURN THE SHIPS TO SCRAP FOR HALF VALUE
-//corresponding array for magazines, access that when magazine bleh
 
 public class OverWorld extends World{
     static int startingScrap = 700;
@@ -148,7 +146,13 @@ public class OverWorld extends World{
     }
         
     public WorldEnd worldEnds(){
-        if(this.theBattle.result.equals(Battlefield.Res.LOSE)){
+        boolean shipsCrossed = false;
+        for(int i = 0; i<enemies.length; i++){
+            if(enemies[i].p.x<0){
+             shipsCrossed=true;   
+            }
+        }
+        if(this.theBattle.result.equals(Battlefield.Res.LOSE)||shipsCrossed){
             return new WorldEnd(true,
 			    new OverlayImages(this.makeImage(),
                                     new OverlayImages(new FromFileImage(new Posn(960/2,600/2), "shade.png"),
@@ -199,17 +203,27 @@ public class OverWorld extends World{
     
     
     public static void main(String[] args) {
-        Tester.testQuadrant(100);
+        Tester.testQuadrantAndThrust(100);
+        Tester.testAI();
+        Tester.testOverWorldLose();
+        Tester.testRadarAndType(100);
+        Tester.testRadarAndFormation(100);
+        Tester.testDoDamage(100);
+        
         RSS[] initialEnems = new RSS[]{
-            new RSS(new Posn(400, 400), true, 3)
+            new RSS(new Posn(500, 400), true, 3),
+            new RSS(new Posn(400, 550), true, 1),
+            new RSS(new Posn(600, 200), true, 2),
+            new RSS(new Posn(700, 300), true, 4),
+            new RSS(new Posn(800, 100), true, 5)
         };
-        //w = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap)
         OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{},0,Battlefield.Res.START),
                 new ISS(new Posn (200, 200), true, 1), 
                 initialEnems, 
                 startingScrap,
                 0);
         w.bigBang(960, 600, fr);
+                
     }
 
 }
