@@ -225,8 +225,8 @@ public class Tester {
         int initISize = emp.size();
         
         
-        Battlefield b = new Battlefield(emp, rebs, new Vader(new Posn(imperialX, 300), 1, false, false, 0), 100000, OverWorld.formations[1],10, Battlefield.Res.START);
-        for(int i = 0; i < 100; i++){
+        Battlefield b = new Battlefield(emp, rebs, new Vader(new Posn(imperialX, 300), 1, false, false, 0), 100000, OverWorld.formations[1],10, Battlefield.Res.DUNNO);
+        for(int i = 0; i < 1000; i++){
         b = b.onTick();
     }
         System.out.println() ;
@@ -257,7 +257,7 @@ public class Tester {
             new RSS(new Posn(800, 100), true, 5)
         };
         
-        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), OverWorld.startingScrap, new SS[]{},0,Battlefield.Res.START),
+        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), OverWorld.startingScrap, new SS[]{},0,Battlefield.Res.DUNNO),
                 new ISS(new Posn (1000, 200), true, 1), 
                 initialEnems, 
                 OverWorld.startingScrap,

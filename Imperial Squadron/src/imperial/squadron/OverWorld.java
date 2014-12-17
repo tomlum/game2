@@ -108,15 +108,13 @@ public class OverWorld extends World{
             RSS[] newEnems = new RSS[this.enemies.length];
                 for(int i = 0; i<this.enemies.length; i++){
                 newEnems[i] = (this.enemies[i].destroy(this.theBattle.rebelBigShipNum-1==i));
-                System.out.println(this.theBattle.rebelBigShipNum-1);
-                System.out.println(this.enemies[i].hereHuh);
             }
                 int newScrap = this.theBattle.scrap;
                 for(int i = 0; i<this.theBattle.imperialFleet.size(); i++){
                     newScrap += this.theBattle.imperialFleet.elementAt(i).cost/2;
             }
                 
-            return new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.theBattle.scrap, this.theBattle.rebelMagazine, 0, Battlefield.Res.START)
+            return new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.theBattle.scrap, this.theBattle.rebelMagazine, 0, Battlefield.Res.DUNNO)
                     , this.impSquad, newEnems, newScrap, this.t+1);  
             }
             
@@ -129,7 +127,7 @@ public class OverWorld extends World{
            Math.abs(this.impSquad.p.x - this.enemies[i].p.x) < 35 &&
            Math.abs(this.impSquad.p.y - this.enemies[i].p.y) < 35){
             newBattleHuh = true;
-            newBat = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.scrap, formations[i],i+1, Battlefield.Res.START);
+            newBat = new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), this.scrap, formations[i],i+1, Battlefield.Res.DUNNO);
         }
         }
             
@@ -217,7 +215,7 @@ public class OverWorld extends World{
             new RSS(new Posn(700, 300), true, 4),
             new RSS(new Posn(800, 100), true, 5)
         };
-        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{},0,Battlefield.Res.START),
+        OverWorld w = new OverWorld(false, new Battlefield(new Vector(), new Vector(), new Vader(new Posn(imperialX, 300), 1, false, false, 0), startingScrap, new SS[]{},0,Battlefield.Res.DUNNO),
                 new ISS(new Posn (200, 200), true, 1), 
                 initialEnems, 
                 startingScrap,

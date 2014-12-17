@@ -98,8 +98,6 @@ public class SS{
     }
     
     public SS justDontHitWalls(){
-        //have turn condition based on enemies/allies/behavior also
-        //for now it's just one direction
         
         switch(this.dir){
             case 1: if(this.p.x+maxspeed*2>Battlefield.rwall){return this.turn(2);} break;
@@ -116,7 +114,6 @@ public class SS{
         int q2 = 0;
         int q3 = 0;
         int q4 = 0;
-        int ss = 0;
         Vector<SS> newV = new Vector();
         for(int i = 0; i < vec.size(); i++){
                     SS enemy = vec.elementAt(i);
@@ -138,28 +135,15 @@ public class SS{
                             q4++;
                         }
                     }
-                    //Not sure if sweetspot is worth keeping, i.e. when enemy is directly in front
-                    //keep going forward
-                    /*
-                    switch(dir){
-                        case 0: if(Math.abs(enemy.p.x-this.p.x) < 40 && enemy.p.y < this.p.y && enemy.p.y > this.p.y - range){
-                                ss++; break;}
-                        case 1: if(Math.abs(enemy.p.y-this.p.y) < 40 && enemy.p.x > this.p.x && enemy.p.x < this.p.x + range){
-                                ss++; break;}
-                        case 2: if(Math.abs(enemy.p.x-this.p.x) < 40 && enemy.p.y > this.p.y && enemy.p.y < this.p.y + range){
-                                ss++; break;}
-                        case 3: if(Math.abs(enemy.p.y-this.p.y) < 40 && enemy.p.x < this.p.x && enemy.p.x < this.p.x - range){
-                                ss++; break;}
-                    }
-                            */
+                    
         }
         switch(this.dir){
-            case 0: return new int[] {ss, q1, q2, q3, q4};
-            case 1: return new int[] {ss, q4, q1, q2, q3};
-            case 2: return new int[] {ss, q3, q4, q1, q2};
-            case 3: return new int[] {ss, q2, q3, q4, q1};
+            case 0: return new int[] {0, q1, q2, q3, q4};
+            case 1: return new int[] {0, q4, q1, q2, q3};
+            case 2: return new int[] {0, q3, q4, q1, q2};
+            case 3: return new int[] {0, q2, q3, q4, q1};
         }
-        return new int[] {ss, q1, q2, q3, q4}; 
+        return new int[] {0, q1, q2, q3, q4}; 
     }
     
     
@@ -229,8 +213,8 @@ public class SS{
             newTF.t = Tester.randomInt(speederMinT, speederMaxT);
             }
             newTF.t = Tester.randomInt(minT, maxT);
-        if(readout[0]+readout[1]+readout[2]+readout[3]+readout[4]<=0
-                &&fReadout[0]+fReadout[1]+fReadout[2]+fReadout[3]+fReadout[4]<=0){
+        if(readout[1]+readout[2]+readout[3]+readout[4]<=0
+                && fReadout[1]+fReadout[2]+fReadout[3]+fReadout[4]<=0){
             if(Math.random()<chanceToTurn){
                     if(Math.random()>.5){ 
                         newTF = newTF.turn(3);
@@ -266,14 +250,7 @@ public class SS{
     }
     }
     
-    public SS swapType(Type toMake){
-        switch(toMake){
-            case HUNT: return new SS(this.p, this.dir, this.t, this.imperial, Type.HUNT, this.health, this.attacking, this.fo, this.m, this.range);
-            case EVADE: return new SS(this.p, this.dir, this.t, this.imperial, Type.EVADE, this.health, this.attacking, this.fo, this.m, this.range);
-    }
-        return this;
-    }
-    
+  
     public SS doDamage(int dam){
         return this.health>0? 
                 new SS(this.p, this.dir, this.t, this.imperial, this.ty, Math.max(this.health-dam, 0), this.attacking, this.fo, this.m, this.range)
@@ -328,14 +305,7 @@ public class SS{
         return new SS(this.p, this.dir, this.t, this.imperial, this.ty, this.health, false, this.fo, this.m, this.range);
     }
     
-    public SS swapFormation(Formation form){
-        switch(form){
-            case CLUSTER: return new SS(this.p, this.dir, this.t, this.imperial, this.ty, this.health, this.attacking, Formation.CLUSTER, this.m, this.range);
-            case SCATTER: return new SS(this.p, this.dir, this.t, this.imperial, this.ty, this.health, this.attacking, Formation.SCATTER, this.m, this.range);
-            case IGNORE: return new SS(this.p, this.dir, this.t, this.imperial, this.ty, this.health, this.attacking, Formation.IGNORE, this.m, this.range);
-        }
-        return this;
-    }
+    
     
     
     

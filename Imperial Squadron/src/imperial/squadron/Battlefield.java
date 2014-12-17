@@ -34,7 +34,7 @@ public class Battlefield extends World{
     int rebelBigShipNum;
     Res result;
     public enum Res{
-    DONE,WIN,LOSE,DUNNO,START}
+    DONE,WIN,LOSE,DUNNO}
     
     //array of friendlies and array of enemies
     
@@ -54,18 +54,18 @@ public class Battlefield extends World{
     public Battlefield onTick(){
         
         
-        if(this.result.equals(Res.DUNNO)||this.result.equals(Res.START)){
+        if(this.result.equals(Res.DUNNO)){
             Res newResult = Res.DUNNO;
             
            if(rebelFleet.size()<=0 && this.rebelMagazine.length<=0){
                newResult = Res.WIN;
            }
            
-           if(!this.result.equals(Res.START) && this.darth.deployed && this.imperialFleet.size() <= 0){
+           if(this.darth.deployed && this.imperialFleet.size() <= 0){
                newResult = Res.LOSE;
            }
            
-           if(!this.result.equals(Res.START) && this.scrap<25 && this.imperialFleet.size()<=0){
+           if(this.scrap<25 && this.imperialFleet.size()<=0){
                newResult = Res.LOSE;
            }
          
@@ -102,9 +102,9 @@ public class Battlefield extends World{
                 newRF.remove(i-rRemoved);
                 rRemoved++;
                 switch(rebelFleet.elementAt(i).m){
-                    case REG: newScrap += 20; break;
-                    case SPEEDER: newScrap += 10; break;
-                    case TANK: newScrap += 30; break;
+                    case REG: newScrap += 40; break;
+                    case SPEEDER: newScrap += 20; break;
+                    case TANK: newScrap += 60; break;
                 }
             }
             }
@@ -157,36 +157,26 @@ public class Battlefield extends World{
         
         
         
-        if((this.result.equals(Res.DUNNO)||this.result.equals(Res.START))){
+        if(this.result.equals(Res.DUNNO)){
         
         
         Vector<SS> newIF = imperialFleet;
         Vector<SS> newRF = rebelFleet;
         Vader newDV = this.darth;
         int newScrap = scrap;
-        Res newRes = this.result;
         
         if(!darth.deployed){
             if(ke.equals("a")&&newScrap>=regCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.startHealth, false, iFormation, SS.Make.REG, SS.regRange));
                 newScrap -= regCost;
-                if(this.result.equals(Res.START)){
-                    newRes = Res.DUNNO;
-                }
             }
             if(ke.equals("q")&&newScrap>=speederCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.speederStartHealth, false, iFormation, SS.Make.SPEEDER, SS.speederRange));
                 newScrap -= speederCost;
-                if(this.result.equals(Res.START)){
-                    newRes = Res.DUNNO;
-                }
             }
             if(ke.equals("z")&&newScrap>=tankCost){
                     newIF.add(new SS(new Posn(lwall, this.darth.p.y), 1, SS.launchT, true, iType, SS.tankStartHealth, false, iFormation, SS.Make.TANK, SS.tankRange));
                 newScrap -= tankCost;
-                if(this.result.equals(Res.START)){
-                    newRes = Res.DUNNO;
-                }
             }
         }
             
@@ -209,20 +199,7 @@ public class Battlefield extends World{
                 newIF = newNewIF;
                 */
             }
-            if(ke.equals("8")){
-                switch(rType){
-                    case EVADE: rType = SS.Type.HUNT; break;
-                    case HUNT: rType = SS.Type.EVADE; break;
-                }
-            }
             
-            if(ke.equals("3")){
-                switch(iMake){
-                    case REG: iMake = SS.Make.SPEEDER; break;
-                    case SPEEDER: iMake = SS.Make.TANK; break;
-                    case TANK: iMake = SS.Make.REG; break;
-                }
-            }
             
            
             if(ke.equals("2")){
@@ -258,7 +235,7 @@ public class Battlefield extends World{
             
                     
             
-            return new Battlefield(newIF, newRF, newDV, newScrap, new SS[]{}, this.rebelBigShipNum, newRes);
+            return new Battlefield(newIF, newRF, newDV, newScrap, new SS[]{}, this.rebelBigShipNum, Res.DUNNO);
     }
         else {
           if(ke.equals(" ")){
@@ -300,7 +277,7 @@ public class Battlefield extends World{
             
             int newScrap = 0;
                 for(int i = 0; i<this.imperialFleet.size(); i++){
-                    newScrap += this.imperialFleet.elementAt(i).cost/3;
+                    newScrap += this.imperialFleet.elementAt(i).cost/2;
             }
             
         WorldImage Res = new OverlayImages(theShips, new FromFileImage(new Posn(960/2,600/2), "shade.png"));

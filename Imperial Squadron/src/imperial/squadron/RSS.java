@@ -25,7 +25,7 @@ public class RSS extends BigShip{
     }
     
     public RSS destroy(boolean b){
-        return new RSS(new Posn(this.p.x-speed, this.p.y), !b, 0);
+        return new RSS(new Posn(this.p.x, this.p.y), !b, 0);
     }
     
 }
